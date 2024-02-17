@@ -1,6 +1,6 @@
-package net.ugurkartal.wmsservice.service.concretes;
+package net.ugurkartal.wmsservice.services.concretes;
 
-import net.ugurkartal.wmsservice.service.abstracts.GenerateIDService;
+import net.ugurkartal.wmsservice.services.abstracts.GenerateIDService;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package net.ugurkartal.wmsservice.service.requests;
+package net.ugurkartal.wmsservice.services.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SupplierCreateRequest {
+public class SupplierUpdateRequest {
     private String name;
     private String contactName;
     private String email;
     private String phone;
+    private boolean isActive;
 }

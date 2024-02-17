@@ -1,4 +1,4 @@
-package net.ugurkartal.wmsservice.service.abstracts;
+package net.ugurkartal.wmsservice.services.abstracts;
 
 import org.springframework.stereotype.Service;
 
