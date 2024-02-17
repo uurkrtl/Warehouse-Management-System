@@ -2,10 +2,10 @@ package net.ugurkartal.wmsservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import net.ugurkartal.wmsservice.models.Supplier;
-import net.ugurkartal.wmsservice.service.abstracts.SupplierService;
-import net.ugurkartal.wmsservice.service.dtos.SupplierDto;
-import net.ugurkartal.wmsservice.service.requests.SupplierCreateRequest;
-import net.ugurkartal.wmsservice.service.requests.SupplierUpdateRequest;
+import net.ugurkartal.wmsservice.services.abstracts.SupplierService;
+import net.ugurkartal.wmsservice.services.dtos.SupplierDto;
+import net.ugurkartal.wmsservice.services.requests.SupplierCreateRequest;
+import net.ugurkartal.wmsservice.services.requests.SupplierUpdateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +42,7 @@ public class SupplierController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable String id) {
         supplierService.deleteById(id);
     }

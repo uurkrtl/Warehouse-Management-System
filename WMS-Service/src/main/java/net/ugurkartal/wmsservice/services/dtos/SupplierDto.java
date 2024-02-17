@@ -1,4 +1,4 @@
-package net.ugurkartal.wmsservice.service.dtos;
+package net.ugurkartal.wmsservice.services.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

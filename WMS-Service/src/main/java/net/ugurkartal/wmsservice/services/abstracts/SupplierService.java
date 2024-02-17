@@ -1,9 +1,9 @@
-package net.ugurkartal.wmsservice.service.abstracts;
+package net.ugurkartal.wmsservice.services.abstracts;
 
 import net.ugurkartal.wmsservice.models.Supplier;
-import net.ugurkartal.wmsservice.service.dtos.SupplierDto;
-import net.ugurkartal.wmsservice.service.requests.SupplierCreateRequest;
-import net.ugurkartal.wmsservice.service.requests.SupplierUpdateRequest;
+import net.ugurkartal.wmsservice.services.dtos.SupplierDto;
+import net.ugurkartal.wmsservice.services.requests.SupplierCreateRequest;
+import net.ugurkartal.wmsservice.services.requests.SupplierUpdateRequest;
 
 import java.util.List;
 
