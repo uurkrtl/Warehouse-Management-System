@@ -7,6 +7,7 @@ import net.ugurkartal.wmsservice.repositories.CategoryRepository;
 import net.ugurkartal.wmsservice.services.abstracts.CategoryService;
 import net.ugurkartal.wmsservice.services.abstracts.GenerateIDService;
 import net.ugurkartal.wmsservice.services.dtos.CategoryDto;
+import net.ugurkartal.wmsservice.services.mappers.CategoryMapper;
 import net.ugurkartal.wmsservice.services.requests.CategoryCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.CategoryUpdateRequest;
 import org.springframework.stereotype.Service;
@@ -21,29 +22,48 @@ public class CategoryManager implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ModelMapperService modelMapperService;
     private final GenerateIDService generateIDService;
+    private final CategoryMapper categoryMapper;
     @Override
     public List<CategoryDto> getAll() {
         List<Category> categories = this.categoryRepository.findAll();
-        return categories.stream().map(category -> this.modelMapperService.forDto().map(category, CategoryDto.class)).collect(Collectors.toList());
+        List<CategoryDto> categoryDtos = categories.stream().map(category -> categoryMapper.categoryToCategoryDtoMapper(category)).collect(Collectors.toList());
+        return categoryDtos;
     }
 
     @Override
     public CategoryDto getById(String id) {
         Category category = this.categoryRepository.findById(id).orElse(null);
-        return this.modelMapperService.forDto().map(category, CategoryDto.class);
+        CategoryDto categoryDto = this.categoryMapper.categoryToCategoryDtoMapper(category);
+        return categoryDto;
     }
 
     @Override
     public CategoryDto add(CategoryCreateRequest categoryCreateRequest) {
-        Category category = this.modelMapperService.forRequest().map(categoryCreateRequest, Category.class);
-        return this.modelMapperService.forDto().map(this.categoryRepository.save(category.withId(generateIDService.generateCategoryId()).withCreated_at(LocalDateTime.now()).withActive(true)), CategoryDto.class);
+        Category category = this.categoryMapper.createRequestToCategoryMapper(categoryCreateRequest);
+
+        String newId = this.generateIDService.generateCategoryId();
+        category.setId(newId);
+        category.setCreated_at(LocalDateTime.now());
+        category.setActive(true);
+
+        this.categoryRepository.save(category);
+        Category newCategory = this.categoryRepository.findById(newId).orElse(null);
+        CategoryDto categoryDto = this.categoryMapper.categoryToCategoryDtoMapper(newCategory);
+        return categoryDto;
     }
 
     @Override
     public CategoryDto update(String id, CategoryUpdateRequest categoryUpdateRequest) {
+        Category updatedCategory = this.categoryMapper.updateRequestToCategoryMapper(categoryUpdateRequest);
         Category foundCategory = this.categoryRepository.findById(id).orElse(null);
-        Category category = this.modelMapperService.forRequest().map(categoryUpdateRequest, Category.class);
-        return this.modelMapperService.forDto().map(this.categoryRepository.save(category.withId(id).withCreated_at(foundCategory.getCreated_at()).withUpdated_at(LocalDateTime.now())), CategoryDto.class);
+        updatedCategory.setId(id);
+        updatedCategory.setCreated_at(foundCategory.getCreated_at());
+        updatedCategory.setUpdated_at(LocalDateTime.now());
+        this.categoryRepository.save(updatedCategory);
+
+        Category newCategory = this.categoryRepository.findById(id).orElse(null);
+        CategoryDto categoryDto = this.categoryMapper.categoryToCategoryDtoMapper(newCategory);
+        return categoryDto;
     }
 
     @Override

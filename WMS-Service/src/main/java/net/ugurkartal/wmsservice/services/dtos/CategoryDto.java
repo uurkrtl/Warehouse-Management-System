@@ -13,7 +13,7 @@ public class CategoryDto {
     private String id;
     private String name;
     private String description;
-    private String created_at;
-    private String updated_at;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
     private boolean isActive;
 }
