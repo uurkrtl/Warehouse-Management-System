@@ -36,14 +36,14 @@ public class CategoryManager implements CategoryService {
     @Override
     public CategoryDto add(CategoryCreateRequest categoryCreateRequest) {
         Category category = this.modelMapperService.forRequest().map(categoryCreateRequest, Category.class);
-        return this.modelMapperService.forRequest().map(this.categoryRepository.save(category.withId(generateIDService.generateCategoryId()).withCreated_at(LocalDateTime.now()).withActive(true)), CategoryDto.class);
+        return this.modelMapperService.forDto().map(this.categoryRepository.save(category.withId(generateIDService.generateCategoryId()).withCreated_at(LocalDateTime.now()).withActive(true)), CategoryDto.class);
     }
 
     @Override
     public CategoryDto update(String id, CategoryUpdateRequest categoryUpdateRequest) {
         Category foundCategory = this.categoryRepository.findById(id).orElse(null);
         Category category = this.modelMapperService.forRequest().map(categoryUpdateRequest, Category.class);
-        return this.modelMapperService.forRequest().map(this.categoryRepository.save(category.withId(id).withCreated_at(foundCategory.getCreated_at()).withUpdated_at(LocalDateTime.now())), CategoryDto.class);
+        return this.modelMapperService.forDto().map(this.categoryRepository.save(category.withId(id).withCreated_at(foundCategory.getCreated_at()).withUpdated_at(LocalDateTime.now())), CategoryDto.class);
     }
 
     @Override
