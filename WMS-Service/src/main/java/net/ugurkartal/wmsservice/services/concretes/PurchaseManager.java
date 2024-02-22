@@ -4,15 +4,18 @@ import lombok.RequiredArgsConstructor;
 import net.ugurkartal.wmsservice.models.Product;
 import net.ugurkartal.wmsservice.models.Purchase;
 import net.ugurkartal.wmsservice.models.Supplier;
+import net.ugurkartal.wmsservice.models.enums.StockMovementReason;
 import net.ugurkartal.wmsservice.repositories.ProductRepository;
 import net.ugurkartal.wmsservice.repositories.PurchaseRepository;
 import net.ugurkartal.wmsservice.repositories.SupplierRepository;
 import net.ugurkartal.wmsservice.services.abstracts.GenerateIDService;
 import net.ugurkartal.wmsservice.services.abstracts.PurchaseService;
+import net.ugurkartal.wmsservice.services.abstracts.StockMovementService;
 import net.ugurkartal.wmsservice.services.dtos.PurchaseDto;
 import net.ugurkartal.wmsservice.services.mappers.PurchaseMapper;
 import net.ugurkartal.wmsservice.services.requests.PurchaseCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.PurchaseUpdateRequest;
+import net.ugurkartal.wmsservice.services.requests.StockMovementCreateRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +30,7 @@ public class PurchaseManager implements PurchaseService {
     private final SupplierRepository supplierRepository;
     private final GenerateIDService generateIDService;
     private final PurchaseMapper purchaseMapper;
+    private final StockMovementService stockMovementService;
 
     @Override
     public List<PurchaseDto> getAll() {
@@ -57,6 +61,15 @@ public class PurchaseManager implements PurchaseService {
         purchase.setActive(true);
 
         purchase = this.purchaseRepository.save(purchase);
+
+        StockMovementCreateRequest stockMovementCreateRequest = StockMovementCreateRequest.builder()
+                .productId(purchaseCreateRequest.getProductId())
+                .quantity(purchaseCreateRequest.getQuantity())
+                .type(true)
+                .reason(StockMovementReason.PURCHASE)
+                .build();
+        stockMovementService.add(stockMovementCreateRequest);
+
         return this.purchaseMapper.purchaseToPurchaseDtoMapper(purchase);
     }
 

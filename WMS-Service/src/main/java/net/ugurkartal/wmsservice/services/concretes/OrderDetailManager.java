@@ -4,15 +4,18 @@ import lombok.RequiredArgsConstructor;
 import net.ugurkartal.wmsservice.models.Order;
 import net.ugurkartal.wmsservice.models.OrderDetail;
 import net.ugurkartal.wmsservice.models.Product;
+import net.ugurkartal.wmsservice.models.enums.StockMovementReason;
 import net.ugurkartal.wmsservice.repositories.OrderDetailRepository;
 import net.ugurkartal.wmsservice.repositories.OrderRepository;
 import net.ugurkartal.wmsservice.repositories.ProductRepository;
 import net.ugurkartal.wmsservice.services.abstracts.GenerateIDService;
 import net.ugurkartal.wmsservice.services.abstracts.OrderDetailService;
+import net.ugurkartal.wmsservice.services.abstracts.StockMovementService;
 import net.ugurkartal.wmsservice.services.dtos.OrderDetailDto;
 import net.ugurkartal.wmsservice.services.mappers.OrderDetailMapper;
 import net.ugurkartal.wmsservice.services.requests.OrderDetailCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.OrderDetailUpdateRequest;
+import net.ugurkartal.wmsservice.services.requests.StockMovementCreateRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +29,7 @@ public class OrderDetailManager implements OrderDetailService {
     private final GenerateIDService generateIDService;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final StockMovementService stockMovementService;
 
     @Override
     public List<OrderDetailDto> getAll() {
@@ -56,6 +60,15 @@ public class OrderDetailManager implements OrderDetailService {
         orderDetail.setActive(true);
 
         orderDetail = this.orderDetailRepository.save(orderDetail);
+
+        StockMovementCreateRequest stockMovementCreateRequest = StockMovementCreateRequest.builder()
+                .productId(orderDetailCreateRequest.getProductId())
+                .quantity(orderDetailCreateRequest.getQuantity())
+                .type(false)
+                .reason(StockMovementReason.SALE)
+                .build();
+        stockMovementService.add(stockMovementCreateRequest);
+
         return this.orderDetailMapper.orderDetailToOrderDetailDtoMapper(orderDetail);
     }
 

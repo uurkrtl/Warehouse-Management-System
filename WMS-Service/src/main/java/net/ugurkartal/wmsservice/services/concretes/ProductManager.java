@@ -74,4 +74,12 @@ public class ProductManager implements ProductService {
         this.categoryRepository.deleteById(id);
         return true;
     }
+
+    @Override
+    public ProductDto updateStock(String id, int quantity) {
+        Product foundProduct = this.productRepository.findById(id).orElse(null);
+        foundProduct.setStock(foundProduct.getStock() + quantity);
+        foundProduct = this.productRepository.save(foundProduct);
+        return this.productMapper.productToProductDtoMapper(foundProduct);
+    }
 }

@@ -6,6 +6,7 @@ import net.ugurkartal.wmsservice.models.StockMovement;
 import net.ugurkartal.wmsservice.repositories.ProductRepository;
 import net.ugurkartal.wmsservice.repositories.StockMovementRepository;
 import net.ugurkartal.wmsservice.services.abstracts.GenerateIDService;
+import net.ugurkartal.wmsservice.services.abstracts.ProductService;
 import net.ugurkartal.wmsservice.services.abstracts.StockMovementService;
 import net.ugurkartal.wmsservice.services.dtos.StockMovementDto;
 import net.ugurkartal.wmsservice.services.mappers.StockMovementMapper;
@@ -24,6 +25,7 @@ public class StockMovementManager implements StockMovementService {
     private final GenerateIDService generateIDService;
     private final StockMovementMapper stockMovementMapper;
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Override
     public List<StockMovementDto> getAll() {
@@ -41,6 +43,13 @@ public class StockMovementManager implements StockMovementService {
 
     @Override
     public StockMovementDto add(StockMovementCreateRequest stockMovementCreateRequest) {
+        if (!stockMovementCreateRequest.isType()) {
+            stockMovementCreateRequest.setQuantity(stockMovementCreateRequest.getQuantity() * -1);
+        }
+
+        // Update stock in product class
+        productService.updateStock(stockMovementCreateRequest.getProductId(), stockMovementCreateRequest.getQuantity());
+
         StockMovement stockMovement = this.stockMovementMapper.createRequestToStockMovementMapper(stockMovementCreateRequest);
         Product foundProduct = this.productRepository.findById(stockMovementCreateRequest.getProductId()).orElse(null);
 
@@ -50,6 +59,9 @@ public class StockMovementManager implements StockMovementService {
         stockMovement.setCreated_at(LocalDateTime.now());
 
         stockMovement = this.stockMovementRepository.save(stockMovement);
+
+
+
         return this.stockMovementMapper.stockMovementToStockMovementDtoMapper(stockMovement);
     }
 

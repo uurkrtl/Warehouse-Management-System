@@ -12,4 +12,5 @@ public interface ProductService {
     ProductDto add(ProductCreateRequest productCreateRequest);
     ProductDto update(String id, ProductUpdateRequest productUpdateRequest);
     boolean deleteById(String id);
+    ProductDto updateStock(String id, int quantity);
 }
