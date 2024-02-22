@@ -7,30 +7,35 @@ import java.util.UUID;
 @Service
 public class GenerateIDManager implements GenerateIDService {
     @Override
-    public String generateSupplierId() { return "SP-" + UUID.randomUUID(); }
+    public String generateSupplierId() { return "SUP-" + UUID.randomUUID(); }
 
     @Override
     public String generateCategoryId() {
-        return "CT-" + UUID.randomUUID();
+        return "CAT-" + UUID.randomUUID();
     }
 
     @Override
     public String generateProductId() {
-        return "PR-" + UUID.randomUUID();
+        return "PRD-" + UUID.randomUUID();
     }
 
     @Override
     public String generatePurchaseId() {
-        return "PU-" + UUID.randomUUID();
+        return "PUR-" + UUID.randomUUID();
     }
 
     @Override
     public String generateOrderId() {
-        return "OR-" + UUID.randomUUID();
+        return "ORD-" + UUID.randomUUID();
     }
 
     @Override
     public String generateOrderDetailId() {
-        return "OD-" + UUID.randomUUID();
+        return "ODT-" + UUID.randomUUID();
+    }
+
+    @Override
+    public String generateStockMovementId() {
+        return "SMV-" + UUID.randomUUID();
     }
 }
