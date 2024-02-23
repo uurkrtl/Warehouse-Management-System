@@ -9,6 +9,7 @@ import net.ugurkartal.wmsservice.services.abstracts.SupplierService;
 import net.ugurkartal.wmsservice.services.dtos.SupplierDto;
 import net.ugurkartal.wmsservice.services.requests.SupplierCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.SupplierUpdateRequest;
+import net.ugurkartal.wmsservice.services.validations.SupplierValidation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class SupplierManager implements SupplierService {
     private final SupplierRepository supplierRepository;
     private final ModelMapperService modelMapperService;
     private final GenerateIDService generateIDService;
+    private final SupplierValidation supplierValidation;
 
     @Override
     public List<SupplierDto> getAll() {
@@ -31,6 +33,7 @@ public class SupplierManager implements SupplierService {
 
     @Override
     public SupplierDto getById(String id) {
+        this.supplierValidation.checkIfSupplierByIdNotFound(id);
         Supplier supplier = this.supplierRepository.findById(id).orElse(null);
         SupplierDto supplierDto = this.modelMapperService.forDto().map(supplier, SupplierDto.class);
         return supplierDto;
@@ -38,12 +41,14 @@ public class SupplierManager implements SupplierService {
 
     @Override
     public Supplier add(SupplierCreateRequest supplierCreateRequest) {
+        this.supplierValidation.checkIfSupplierNameExists(supplierCreateRequest.getName());
         Supplier supplier = this.modelMapperService.forRequest().map(supplierCreateRequest, Supplier.class);
         return this.supplierRepository.save(supplier.withId(generateIDService.generateSupplierId()).withCreatedAt(LocalDateTime.now()).withActive(true));
     }
 
     @Override
     public Supplier update(String id, SupplierUpdateRequest supplierUpdateRequest) {
+        this.supplierValidation.checkIfSupplierByIdNotFound(id);
         Supplier foundSupplier = this.supplierRepository.findById(id).orElse(null);
         Supplier supplier = modelMapperService.forRequest().map(supplierUpdateRequest, Supplier.class);
         return this.supplierRepository.save(supplier.withId(id).withCreatedAt(foundSupplier.getCreatedAt()).withUpdatedAt(LocalDateTime.now()));
@@ -51,6 +56,7 @@ public class SupplierManager implements SupplierService {
 
     @Override
     public boolean deleteById(String id) {
+        this.supplierValidation.checkIfSupplierByIdNotFound(id);
         Supplier supplier = this.supplierRepository.findById(id).orElse(null);
         this.supplierRepository.deleteById(id);
         return supplier != null ? true : false;

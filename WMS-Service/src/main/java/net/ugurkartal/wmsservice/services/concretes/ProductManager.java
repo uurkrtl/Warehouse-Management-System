@@ -11,6 +11,7 @@ import net.ugurkartal.wmsservice.services.dtos.ProductDto;
 import net.ugurkartal.wmsservice.services.mappers.ProductMapper;
 import net.ugurkartal.wmsservice.services.requests.ProductCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.ProductUpdateRequest;
+import net.ugurkartal.wmsservice.services.validations.ProductValidation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class ProductManager implements ProductService {
     private final CategoryRepository categoryRepository;
     private final GenerateIDService generateIDService;
     private final ProductMapper productMapper;
+    private final ProductValidation productValidation;
 
     @Override
     public List<ProductDto> getAll() {
@@ -34,6 +36,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public ProductDto getById(String id) {
+        this.productValidation.checkIfProductByIdNotFound(id);
         Product product = this.productRepository.findById(id).orElse(null);
         ProductDto productDto = this.productMapper.productToProductDtoMapper(product);
         return productDto;
@@ -41,6 +44,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public ProductDto add(ProductCreateRequest productCreateRequest) {
+        this.productValidation.checkIfProductNameExists(productCreateRequest.getName());
         Product product = this.productMapper.createRequestToProductMapper(productCreateRequest);
         Category foundCategory = this.categoryRepository.findById(productCreateRequest.getCategoryId()).orElse(null);
 
@@ -56,6 +60,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public ProductDto update(String id, ProductUpdateRequest productUpdateRequest) {
+        this.productValidation.checkIfProductByIdNotFound(id);
         Product updatedProduct = this.productMapper.updateRequestToProductMapper(productUpdateRequest);
         Product foundProduct = this.productRepository.findById(id).orElse(null);
         Category foundCategory = this.categoryRepository.findById(productUpdateRequest.getCategoryId()).orElse(null);
@@ -71,6 +76,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public boolean deleteById(String id) {
+        this.productValidation.checkIfProductByIdNotFound(id);
         this.categoryRepository.deleteById(id);
         return true;
     }

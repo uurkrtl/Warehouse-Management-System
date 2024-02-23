@@ -16,6 +16,7 @@ import net.ugurkartal.wmsservice.services.mappers.PurchaseMapper;
 import net.ugurkartal.wmsservice.services.requests.PurchaseCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.PurchaseUpdateRequest;
 import net.ugurkartal.wmsservice.services.requests.StockMovementCreateRequest;
+import net.ugurkartal.wmsservice.services.validations.PurchaseValidation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ public class PurchaseManager implements PurchaseService {
     private final GenerateIDService generateIDService;
     private final PurchaseMapper purchaseMapper;
     private final StockMovementService stockMovementService;
+    private final PurchaseValidation purchaseValidation;
 
     @Override
     public List<PurchaseDto> getAll() {
@@ -41,6 +43,7 @@ public class PurchaseManager implements PurchaseService {
 
     @Override
     public PurchaseDto getById(String id) {
+        this.purchaseValidation.checkIfPurchaseByIdNotFound(id);
         Purchase purchase = this.purchaseRepository.findById(id).orElse(null);
         PurchaseDto purchaseDto = this.purchaseMapper.purchaseToPurchaseDtoMapper(purchase);
         return purchaseDto;
@@ -75,6 +78,7 @@ public class PurchaseManager implements PurchaseService {
 
     @Override
     public PurchaseDto update(String id, PurchaseUpdateRequest purchaseUpdateRequest) {
+        this.purchaseValidation.checkIfPurchaseByIdNotFound(id);
         Purchase updatedPurchase = this.purchaseMapper.updateRequestToPurchaseMapper(purchaseUpdateRequest);
         Purchase foundPurchase = this.purchaseRepository.findById(id).orElse(null);
         Product foundProduct = this.productRepository.findById(purchaseUpdateRequest.getProductId()).orElse(null);
@@ -92,6 +96,7 @@ public class PurchaseManager implements PurchaseService {
 
     @Override
     public boolean deleteById(String id) {
+        this.purchaseValidation.checkIfPurchaseByIdNotFound(id);
         this.purchaseRepository.deleteById(id);
         return true;
     }

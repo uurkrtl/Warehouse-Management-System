@@ -6,6 +6,7 @@ import net.ugurkartal.wmsservice.repositories.SupplierRepository;
 import net.ugurkartal.wmsservice.services.dtos.SupplierDto;
 import net.ugurkartal.wmsservice.services.requests.SupplierCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.SupplierUpdateRequest;
+import net.ugurkartal.wmsservice.services.validations.SupplierValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -22,6 +23,7 @@ class SupplierManagerTest {
     private ModelMapper modelMapper;
     private SupplierManager supplierManager;
     private GenerateIDManager generateIDManager;
+    private SupplierValidation supplierValidation;
 
     @BeforeEach
     void setUp() {
@@ -29,7 +31,9 @@ class SupplierManagerTest {
         modelMapperManager = mock(ModelMapperManager.class);
         supplierRepository = mock(SupplierRepository.class);
         generateIDManager = mock(GenerateIDManager.class);
-        supplierManager = new SupplierManager(supplierRepository, modelMapperManager, generateIDManager);
+        supplierValidation = mock(SupplierValidation.class);
+
+        supplierManager = new SupplierManager(supplierRepository, modelMapperManager, generateIDManager, supplierValidation);
 
         when(modelMapperManager.forDto()).thenReturn(modelMapper);
         when(modelMapperManager.forRequest()).thenReturn(modelMapper);

@@ -1,5 +1,6 @@
 package net.ugurkartal.wmsservice.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.ugurkartal.wmsservice.services.abstracts.ProductService;
 import net.ugurkartal.wmsservice.services.dtos.ProductDto;
@@ -29,8 +30,8 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto add(@RequestBody ProductCreateRequest productCreateRequest) {
+    //@ResponseStatus(HttpStatus.CREATED)
+    public ProductDto add(@Valid @RequestBody ProductCreateRequest productCreateRequest) {
         return productService.add(productCreateRequest);
     }
 

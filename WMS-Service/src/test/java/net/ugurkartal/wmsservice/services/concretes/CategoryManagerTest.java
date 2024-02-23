@@ -1,19 +1,16 @@
 package net.ugurkartal.wmsservice.services.concretes;
 
-import net.ugurkartal.wmsservice.core.utilities.mappers.ModelMapperService;
 import net.ugurkartal.wmsservice.models.Category;
-import net.ugurkartal.wmsservice.models.Supplier;
 import net.ugurkartal.wmsservice.repositories.CategoryRepository;
 import net.ugurkartal.wmsservice.services.abstracts.GenerateIDService;
 import net.ugurkartal.wmsservice.services.dtos.CategoryDto;
 import net.ugurkartal.wmsservice.services.mappers.CategoryMapper;
 import net.ugurkartal.wmsservice.services.requests.CategoryCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.CategoryUpdateRequest;
+import net.ugurkartal.wmsservice.services.validations.CategoryValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,22 +19,18 @@ import static org.mockito.Mockito.*;
 
 class CategoryManagerTest {
     private CategoryRepository categoryRepository;
-    private ModelMapperService modelMapperService;
     private GenerateIDService generateIDService;
     private CategoryManager categoryManager;
-    private ModelMapper modelMapper;
     private CategoryMapper categoryMapper;
+    private CategoryValidation categoryValidation;
 
     @BeforeEach
     void setUp() {
-        modelMapper = mock(ModelMapper.class);
-        modelMapperService = mock(ModelMapperService.class);
         categoryRepository = mock(CategoryRepository.class);
         generateIDService = mock(GenerateIDService.class);
         categoryMapper = new CategoryMapper();
-        categoryManager = new CategoryManager(categoryRepository, modelMapperService, generateIDService, categoryMapper);
-        when(modelMapperService.forDto()).thenReturn(modelMapper);
-        when(modelMapperService.forRequest()).thenReturn(modelMapper);
+        categoryValidation = mock(CategoryValidation.class);
+        categoryManager = new CategoryManager(categoryRepository, generateIDService, categoryMapper, categoryValidation);
     }
 
     @Test
