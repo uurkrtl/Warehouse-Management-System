@@ -11,6 +11,7 @@ import net.ugurkartal.wmsservice.services.dtos.ProductDto;
 import net.ugurkartal.wmsservice.services.mappers.ProductMapper;
 import net.ugurkartal.wmsservice.services.requests.ProductCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.ProductUpdateRequest;
+import net.ugurkartal.wmsservice.services.validations.CategoryValidation;
 import net.ugurkartal.wmsservice.services.validations.ProductValidation;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class ProductManager implements ProductService {
     private final GenerateIDService generateIDService;
     private final ProductMapper productMapper;
     private final ProductValidation productValidation;
+    private final CategoryValidation categoryValidation;
 
     @Override
     public List<ProductDto> getAll() {
@@ -45,6 +47,7 @@ public class ProductManager implements ProductService {
     @Override
     public ProductDto add(ProductCreateRequest productCreateRequest) {
         this.productValidation.checkIfProductNameExists(productCreateRequest.getName());
+        this.categoryValidation.checkIfCategoryByIdNotFound(productCreateRequest.getCategoryId());
         Product product = this.productMapper.createRequestToProductMapper(productCreateRequest);
         Category foundCategory = this.categoryRepository.findById(productCreateRequest.getCategoryId()).orElse(null);
 
@@ -61,6 +64,7 @@ public class ProductManager implements ProductService {
     @Override
     public ProductDto update(String id, ProductUpdateRequest productUpdateRequest) {
         this.productValidation.checkIfProductByIdNotFound(id);
+        this.categoryValidation.checkIfCategoryByIdNotFound(productUpdateRequest.getCategoryId());
         Product updatedProduct = this.productMapper.updateRequestToProductMapper(productUpdateRequest);
         Product foundProduct = this.productRepository.findById(id).orElse(null);
         Category foundCategory = this.categoryRepository.findById(productUpdateRequest.getCategoryId()).orElse(null);

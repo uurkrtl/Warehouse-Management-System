@@ -16,6 +16,7 @@ import net.ugurkartal.wmsservice.services.mappers.PurchaseMapper;
 import net.ugurkartal.wmsservice.services.requests.PurchaseCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.PurchaseUpdateRequest;
 import net.ugurkartal.wmsservice.services.requests.StockMovementCreateRequest;
+import net.ugurkartal.wmsservice.services.validations.ProductValidation;
 import net.ugurkartal.wmsservice.services.validations.PurchaseValidation;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class PurchaseManager implements PurchaseService {
     private final PurchaseMapper purchaseMapper;
     private final StockMovementService stockMovementService;
     private final PurchaseValidation purchaseValidation;
+    private final ProductValidation productValidation;
 
     @Override
     public List<PurchaseDto> getAll() {
@@ -51,6 +53,7 @@ public class PurchaseManager implements PurchaseService {
 
     @Override
     public PurchaseDto add(PurchaseCreateRequest purchaseCreateRequest) {
+        this.productValidation.checkIfProductByIdNotFound(purchaseCreateRequest.getProductId());
         Purchase purchase = this.purchaseMapper.createRequestToPurchaseMapper(purchaseCreateRequest);
         Product foundProduct = this.productRepository.findById(purchaseCreateRequest.getProductId()).orElse(null);
         Supplier foundSupplier = this.supplierRepository.findById(purchaseCreateRequest.getSupplierId()).orElse(null);
@@ -78,6 +81,7 @@ public class PurchaseManager implements PurchaseService {
 
     @Override
     public PurchaseDto update(String id, PurchaseUpdateRequest purchaseUpdateRequest) {
+        this.productValidation.checkIfProductByIdNotFound(purchaseUpdateRequest.getProductId());
         this.purchaseValidation.checkIfPurchaseByIdNotFound(id);
         Purchase updatedPurchase = this.purchaseMapper.updateRequestToPurchaseMapper(purchaseUpdateRequest);
         Purchase foundPurchase = this.purchaseRepository.findById(id).orElse(null);
