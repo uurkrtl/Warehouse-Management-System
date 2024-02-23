@@ -18,7 +18,7 @@ public class ProductCreateRequest {
     private String description;
     @Positive(message = "Sale price must be greater than 0")
     private double salePrice;
-    @PositiveOrZero(message = "Purchase price must be greater than or equal to 0")
+    @PositiveOrZero(message = "Stock must be greater than or equal to 0")
     private int stock;
     @PositiveOrZero(message = "Critical stock must be greater than or equal to 0")
     private int criticalStock;
