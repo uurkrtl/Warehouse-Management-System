@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,16 +32,19 @@ public class ProductManager implements ProductService {
     @Override
     public List<ProductDto> getAll() {
         List<Product> products = this.productRepository.findAll();
-        List<ProductDto> productDtos = products.stream().map(product -> productMapper.productToProductDtoMapper(product)).collect(Collectors.toList());
-        return productDtos;
+        return products.stream().map(productMapper::productToProductDtoMapper).toList();
     }
 
     @Override
     public ProductDto getById(String id) {
         this.productValidation.checkIfProductByIdNotFound(id);
-        Product product = this.productRepository.findById(id).orElse(null);
-        ProductDto productDto = this.productMapper.productToProductDtoMapper(product);
-        return productDto;
+        Optional<Product> productOptional = this.productRepository.findById(id);
+        if(productOptional.isPresent()) {
+            Product product = productOptional.get();
+            return this.productMapper.productToProductDtoMapper(product);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -54,7 +57,7 @@ public class ProductManager implements ProductService {
         String newId = this.generateIDService.generateProductId();
         product.setId(newId);
         product.setActive(true);
-        product.setCreated_at(LocalDateTime.now());
+        product.setCreatedAt(LocalDateTime.now());
         product.setCategory(foundCategory);
 
         product = this.productRepository.save(product);
@@ -66,12 +69,18 @@ public class ProductManager implements ProductService {
         this.productValidation.checkIfProductByIdNotFound(id);
         this.categoryValidation.checkIfCategoryByIdNotFound(productUpdateRequest.getCategoryId());
         Product updatedProduct = this.productMapper.updateRequestToProductMapper(productUpdateRequest);
-        Product foundProduct = this.productRepository.findById(id).orElse(null);
+        Optional<Product> foundProductOptional = this.productRepository.findById(id);
         Category foundCategory = this.categoryRepository.findById(productUpdateRequest.getCategoryId()).orElse(null);
 
+        if(foundProductOptional.isPresent()) {
+            Product foundProduct = foundProductOptional.get();
+            updatedProduct.setCreatedAt(foundProduct.getCreatedAt());
+        } else {
+            updatedProduct.setCreatedAt(LocalDateTime.now());
+        }
+
         updatedProduct.setId(id);
-        updatedProduct.setCreated_at(foundProduct.getCreated_at());
-        updatedProduct.setUpdated_at(LocalDateTime.now());
+        updatedProduct.setUpdatedAt(LocalDateTime.now());
         updatedProduct.setCategory(foundCategory);
         updatedProduct = this.productRepository.save(updatedProduct);
 
@@ -81,15 +90,21 @@ public class ProductManager implements ProductService {
     @Override
     public boolean deleteById(String id) {
         this.productValidation.checkIfProductByIdNotFound(id);
-        this.categoryRepository.deleteById(id);
+        this.productRepository.deleteById(id);
         return true;
     }
 
     @Override
     public ProductDto updateStock(String id, int quantity) {
-        Product foundProduct = this.productRepository.findById(id).orElse(null);
-        foundProduct.setStock(foundProduct.getStock() + quantity);
-        foundProduct = this.productRepository.save(foundProduct);
-        return this.productMapper.productToProductDtoMapper(foundProduct);
+        this.productValidation.checkIfProductByIdNotFound(id);
+        Optional<Product> foundProductOptional = this.productRepository.findById(id);
+        if (foundProductOptional.isPresent()) {
+            Product foundProduct = foundProductOptional.get();
+            foundProduct.setStock(foundProduct.getStock() - quantity);
+            foundProduct = this.productRepository.save(foundProduct);
+            return this.productMapper.productToProductDtoMapper(foundProduct);
+        }else {
+            return null;
+        }
     }
 }

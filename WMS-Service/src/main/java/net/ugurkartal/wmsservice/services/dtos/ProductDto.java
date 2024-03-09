@@ -3,7 +3,6 @@ package net.ugurkartal.wmsservice.services.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.ugurkartal.wmsservice.models.Category;
 
 import java.time.LocalDateTime;
 
@@ -18,8 +17,8 @@ public class ProductDto {
     private int stock;
     private int criticalStock;
     private String imageUrl;
-    private Category category;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+    private String categoryName;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private boolean isActive;
 }

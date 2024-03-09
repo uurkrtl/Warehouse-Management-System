@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductMapper {
     public ProductDto productToProductDtoMapper(Product product) {
-        return new ProductDto(product.getId(), product.getName(), product.getDescription(), product.getSalePrice(), product.getStock(), product.getCriticalStock(), product.getImageUrl(), product.getCategory(), product.getCreated_at(), product.getUpdated_at(), product.isActive());
+        return new ProductDto(product.getId(), product.getName(), product.getDescription(), product.getSalePrice(), product.getStock(), product.getCriticalStock(), product.getImageUrl(), product.getCategory().getName(), product.getCreatedAt(), product.getUpdatedAt(), product.isActive());
     }
 
     public Product createRequestToProductMapper(ProductCreateRequest productCreateRequest) {

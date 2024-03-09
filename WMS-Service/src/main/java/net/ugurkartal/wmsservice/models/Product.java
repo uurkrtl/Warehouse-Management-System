@@ -26,7 +26,7 @@ public class Product {
     private String imageUrl;
     @DBRef
     private Category category;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private boolean isActive;
 }
