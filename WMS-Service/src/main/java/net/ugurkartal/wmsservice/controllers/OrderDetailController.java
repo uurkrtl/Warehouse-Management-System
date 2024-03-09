@@ -21,7 +21,7 @@ public class OrderDetailController {
     }
 
     @GetMapping("/{id}")
-    public OrderDetailDto getById(String id) {
+    public OrderDetailDto getById(@PathVariable String id) {
         return orderDetailService.getById(id);
     }
 

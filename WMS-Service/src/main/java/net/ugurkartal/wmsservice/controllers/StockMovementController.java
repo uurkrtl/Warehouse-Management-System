@@ -21,7 +21,7 @@ public class StockMovementController {
     }
 
     @GetMapping("/{id}")
-    public StockMovementDto getById(String id) {
+    public StockMovementDto getById(@PathVariable String id) {
         return stockMovementService.getById(id);
     }
 
