@@ -13,6 +13,7 @@ import net.ugurkartal.wmsservice.services.requests.ProductCreateRequest;
 import net.ugurkartal.wmsservice.services.requests.ProductUpdateRequest;
 import net.ugurkartal.wmsservice.services.validations.CategoryValidation;
 import net.ugurkartal.wmsservice.services.validations.ProductValidation;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public List<ProductDto> getAll() {
-        List<Product> products = this.productRepository.findAll();
+        List<Product> products = this.productRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
         return products.stream().map(productMapper::productToProductDtoMapper).toList();
     }
 
