@@ -1,10 +1,11 @@
+import Dashboard from "./layouts/Dashboard.tsx";
+import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
   return (
-    <>
-        <h1>WMS Client</h1>
-        <p>WMS Client is a web-based application for managing a warehouse.</p>
-    </>
+    <div className={'container'}>
+        <Dashboard />
+    </div>
   )
 }
 
