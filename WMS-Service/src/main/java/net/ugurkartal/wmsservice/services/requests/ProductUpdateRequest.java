@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ProductUpdateRequest {
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
     private String name;
-    @Size(min = 3, max = 150, message = "Name must be between 3 and 50 characters")
+    @Size(min = 3, max = 150, message = "Description must be between 3 and 50 characters")
     private String description;
     @Positive(message = "Sale price must be greater than 0")
     private double salePrice;
