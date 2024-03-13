@@ -6,6 +6,7 @@ export type Product = {
     stock: number,
     criticalStock: number,
     imageUrl: string,
+    categoryId: string,
     categoryName: string,
     createdAt: Date,
     updatedAt: Date,
