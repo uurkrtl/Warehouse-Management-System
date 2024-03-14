@@ -17,4 +17,13 @@ export default class ProductService {
     updateProduct(id:string, product: Product) {
         return axios.put(`/api/products/update?id=${id}`,product);
     }
+
+    makeStatusActive(id: string) {
+        return axios.put(`/api/products/makeStatusActive?id=${id}`);
+    }
+
+    makeStatusPassive(id: string) {
+        return axios.put(`/api/products/makeStatusPassive?id=${id}`);
+    }
+
 }

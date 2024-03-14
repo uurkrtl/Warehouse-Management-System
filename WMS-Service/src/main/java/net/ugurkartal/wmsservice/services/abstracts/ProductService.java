@@ -13,4 +13,6 @@ public interface ProductService {
     ProductDto update(String id, ProductUpdateRequest productUpdateRequest);
     boolean deleteById(String id);
     ProductDto updateStock(String id, int quantity);
+    ProductDto makeStatusActive(String id);
+    ProductDto makeStatusPassive(String id);
 }
