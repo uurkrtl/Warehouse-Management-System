@@ -17,6 +17,7 @@ public class ProductDto {
     private int stock;
     private int criticalStock;
     private String imageUrl;
+    private String categoryId;
     private String categoryName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

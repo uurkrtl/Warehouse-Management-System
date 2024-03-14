@@ -110,4 +110,29 @@ public class ProductManager implements ProductService {
             return null;
         }
     }
+
+    @Override
+    public ProductDto makeStatusActive(String id) {
+        Optional<Product> product = this.productRepository.findById(id);
+        if(product.isPresent()) {
+            Product foundProduct = product.get();
+            foundProduct.setActive(true);
+            foundProduct = this.productRepository.save(foundProduct);
+            return this.productMapper.productToProductDtoMapper(foundProduct);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ProductDto makeStatusPassive(String id) {
+        Optional<Product> product = this.productRepository.findById(id);
+        if(product.isPresent()) {
+            Product foundProduct = product.get();
+            foundProduct.setActive(false);
+            foundProduct = this.productRepository.save(foundProduct);
+            return this.productMapper.productToProductDtoMapper(foundProduct);
+        }
+        return null;
+    }
 }

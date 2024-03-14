@@ -46,4 +46,16 @@ public class ProductController {
     public void delete(@PathVariable String id) {
         productService.deleteById(id);
     }
+
+    @PutMapping("/makeStatusActive")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductDto makeStatusActive(@RequestParam String id) {
+        return productService.makeStatusActive(id);
+    }
+
+    @PutMapping("/makeStatusPassive")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductDto makeStatusPassive(@RequestParam String id) {
+        return productService.makeStatusPassive(id);
+    }
 }
