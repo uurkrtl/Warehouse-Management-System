@@ -68,6 +68,7 @@ public class ProductManager implements ProductService {
     @Override
     public ProductDto update(String id, ProductUpdateRequest productUpdateRequest) {
         this.productValidation.checkIfProductByIdNotFound(id);
+        this.productValidation.checkIfProductNameExists(productUpdateRequest.getName(), id);
         this.categoryValidation.checkIfCategoryByIdNotFound(productUpdateRequest.getCategoryId());
         Product updatedProduct = this.productMapper.updateRequestToProductMapper(productUpdateRequest);
         Optional<Product> foundProductOptional = this.productRepository.findById(id);

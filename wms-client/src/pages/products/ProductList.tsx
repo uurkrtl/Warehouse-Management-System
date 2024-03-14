@@ -3,22 +3,35 @@ import {Product} from "../../types/Product.ts";
 import ProductService from "../../services/ProductService.ts";
 import {Link} from "react-router-dom";
 
+const productService = new ProductService();
 
 function ProductList() {
     const [products, setProducts] = useState<Product[]>([]);
     const [filter, setFilter] = useState("");
+    const [productByStatus, setProductByStatus] = useState<Product[]>(products);
 
-    const filteredProducts = products.filter(
+    const filteredProducts = productByStatus.filter(
         (product) =>
             product.name.toLowerCase().includes(filter.toLowerCase())
     );
 
+    const handleStatusChange = (e: React.MouseEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLElement;
+        if (target.id === "activeProducts") {
+            setProductByStatus(products.filter((product) => product.active));
+        } else if (target.id === "passiveProducts") {
+            setProductByStatus(products.filter((product) => !product.active));
+        } else {
+            setProductByStatus(products);
+        }
+    };
+
     useEffect(() => {
-        const productService = new ProductService();
         productService.getAllProducts().then((response) => {
             setProducts(response.data);
+            setProductByStatus(response.data);
         });
-    });
+    }, []);
 
     return (
         <div>
@@ -29,6 +42,23 @@ function ProductList() {
                         d="M8 1a2 2 0 0 1 2 2v2H6V3a2 2 0 0 1 2-2m3 4V3a3 3 0 1 0-6 0v2H3.36a1.5 1.5 0 0 0-1.483 1.277L.85 13.13A2.5 2.5 0 0 0 3.322 16h9.355a2.5 2.5 0 0 0 2.473-2.87l-1.028-6.853A1.5 1.5 0 0 0 12.64 5zm-1 1v1.5a.5.5 0 0 0 1 0V6h1.639a.5.5 0 0 1 .494.426l1.028 6.851A1.5 1.5 0 0 1 12.678 15H3.322a1.5 1.5 0 0 1-1.483-1.723l1.028-6.851A.5.5 0 0 1 3.36 6H5v1.5a.5.5 0 1 0 1 0V6z"/>
                 </svg>
                 <h2>Produktliste</h2>
+            </div>
+
+            <div className="form-check form-check-inline mb-3">
+                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="allProducts"
+                       value="allProducts" onClick={handleStatusChange} defaultChecked/>
+                <label className="form-check-label" htmlFor="allProducts">Alle Produkte</label>
+            </div>
+
+            <div className="form-check form-check-inline mb-3">
+                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="activeProducts"
+                       value="activeProducts" onClick={handleStatusChange}/>
+                <label className="form-check-label" htmlFor="activeProducts">Aktive Produkte</label>
+            </div>
+            <div className="form-check form-check-inline mb-3">
+                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="passiveProducts"
+                       value="passiveProducts" onClick={handleStatusChange}/>
+                <label className="form-check-label" htmlFor="passiveProducts">Passive Produkte</label>
             </div>
 
             <div className="input-group">
@@ -43,7 +73,7 @@ function ProductList() {
             </div>
 
             <table className="table table-striped">
-            <thead>
+                <thead>
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Sale Price</th>
@@ -58,7 +88,7 @@ function ProductList() {
                 {filteredProducts.map((product) => {
                     return (
                         <tr key={product.id}>
-                            <td>{product.name}</td>
+                            <td className={!product.active ? "text-danger" : "text-black"}>{product.name}</td>
                             <td>{product.salePrice}</td>
                             <td>{product.categoryName}</td>
                             <td>
