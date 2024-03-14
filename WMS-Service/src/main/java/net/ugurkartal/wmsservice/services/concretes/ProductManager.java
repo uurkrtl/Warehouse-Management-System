@@ -126,6 +126,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public ProductDto makeStatusPassive(String id) {
+        this.productValidation.checkIfProductStockNotZero(id);
         Optional<Product> product = this.productRepository.findById(id);
         if(product.isPresent()) {
             Product foundProduct = product.get();

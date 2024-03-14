@@ -36,17 +36,29 @@ public class CustomizedExceptionHandler {
                 return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
         }
 
+        @ExceptionHandler(StockNotZeroException.class)
+        public ResponseEntity<ErrorResponse> handleStockNotZeroException(StockNotZeroException ex, WebRequest request) {
+                ErrorResponse errorResponse = new ErrorResponse(
+                        request.getDescription(false),
+                        HttpStatus.BAD_REQUEST,
+                        ex.getMessage(),
+                        LocalDateTime.now()
+                );
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
         @ExceptionHandler
         public ResponseEntity<ErrorResponse>handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request){
+                StringBuilder errorMessages = new StringBuilder();
                 List<ObjectError> errors=ex.getAllErrors();
-                String errorMessage="Errors: ";
+                errorMessages.append("Error: ");
                 for (ObjectError fieldError:errors) {
-                        errorMessage=errorMessage + " - " + fieldError.getDefaultMessage();
+                        errorMessages.append(fieldError.getDefaultMessage()).append(" - ");
                 }
                 ErrorResponse errorResponse = new ErrorResponse(
                         request.getDescription(false),
                         HttpStatus.BAD_REQUEST,
-                        errorMessage,
+                        errorMessages.charAt(errorMessages.length()-2)=='-' ? errorMessages.substring(0,errorMessages.length()-3) : errorMessages.toString(),
                         LocalDateTime.now()
                 );
                 return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -60,6 +72,6 @@ public class CustomizedExceptionHandler {
                         ex.getMessage(),
                         LocalDateTime.now()
                 );
-                return new ResponseEntity<ErrorResponse>(errorResponse,HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
         }
 }

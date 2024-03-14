@@ -85,7 +85,7 @@ function ProductDetail() {
         <div className="row flex-lg-row-reverse align-items-center g-5 py-2">
             <div className="col-10 col-sm-8 col-lg-6">
                 <img src={product.imageUrl} className="d-block mx-lg-auto img-fluid" alt="Product image"
-                     width="450" height="350" loading="lazy"/>
+                     width="400" height="300" loading="lazy"/>
             </div>
             <div className="col-lg-6">
                 <h1 className="display-5 fw-bold text-body-emphasis lh-1 mb-3">{product.name}</h1>
@@ -133,12 +133,12 @@ function ProductDetail() {
                         : <button type="button" className="btn btn-success px-4 me-md-2" onClick={handleSubmitActive}>Aktiv machen</button>}
                     <Link to={`/products`} type="button" className="btn btn-outline-secondary btn-lg px-4">Produktliste</Link>
                 </div>
+                {errorMessage && (
+                    <div className="alert alert-danger mt-3" role="alert">
+                        {errorMessage}
+                    </div>
+                )}
             </div>
-            {errorMessage && (
-                <div className="alert alert-danger" role="alert">
-                    {errorMessage}
-                </div>
-            )}
         </div>
     );
 }
