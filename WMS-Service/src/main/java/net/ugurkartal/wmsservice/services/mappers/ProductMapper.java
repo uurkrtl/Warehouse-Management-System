@@ -17,6 +17,6 @@ public class ProductMapper {
     }
 
     public Product updateRequestToProductMapper(ProductUpdateRequest productUpdateRequest) {
-        return new Product("0", productUpdateRequest.getName(), productUpdateRequest.getDescription(), productUpdateRequest.getSalePrice(), productUpdateRequest.getStock(), productUpdateRequest.getCriticalStock(), productUpdateRequest.getImageUrl(), null, null, null, productUpdateRequest.isActive());
+        return new Product("0", productUpdateRequest.getName(), productUpdateRequest.getDescription(), productUpdateRequest.getSalePrice(), productUpdateRequest.getStock(), productUpdateRequest.getCriticalStock(), productUpdateRequest.getImageUrl(), null, null, null,true);
     }
 }

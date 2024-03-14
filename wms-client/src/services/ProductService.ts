@@ -14,7 +14,7 @@ export default class ProductService {
         return axios.post('/api/products/add', product);
     }
 
-    updateProduct(product: Product) {
-        return axios.put('/api/products/update', product);
+    updateProduct(id:string, product: Product) {
+        return axios.put(`/api/products/update?id=${id}`,product);
     }
 }

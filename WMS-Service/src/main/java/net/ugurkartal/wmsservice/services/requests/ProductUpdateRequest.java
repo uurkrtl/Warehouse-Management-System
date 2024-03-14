@@ -25,5 +25,4 @@ public class ProductUpdateRequest {
     private String imageUrl;
     @NotNull(message = "Category id cannot be null")
     private String categoryId;
-    private boolean isActive;
 }

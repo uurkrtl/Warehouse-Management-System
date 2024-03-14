@@ -77,6 +77,7 @@ public class ProductManager implements ProductService {
         if(foundProductOptional.isPresent()) {
             Product foundProduct = foundProductOptional.get();
             updatedProduct.setCreatedAt(foundProduct.getCreatedAt());
+            updatedProduct.setActive(foundProduct.isActive());
         } else {
             updatedProduct.setCreatedAt(LocalDateTime.now());
         }
