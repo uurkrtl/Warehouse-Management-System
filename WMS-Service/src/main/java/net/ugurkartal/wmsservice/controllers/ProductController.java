@@ -37,7 +37,7 @@ public class ProductController {
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto update(@RequestParam String id, @RequestBody ProductUpdateRequest productCreateRequest) {
+    public ProductDto update(@RequestParam String id, @Valid @RequestBody ProductUpdateRequest productCreateRequest) {
         return productService.update(id, productCreateRequest);
     }
 

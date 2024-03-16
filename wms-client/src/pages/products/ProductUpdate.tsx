@@ -52,7 +52,7 @@ function ProductUpdate() {
         productService.updateProduct(id, product)
             .then(response => {
                 console.log(response)
-                navigate('/products')
+                navigate('/products/detail/' + id)
             })
             .catch(error => {
                 if (error.response) {
